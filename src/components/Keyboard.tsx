@@ -2,37 +2,35 @@ import KeyRow from "@/components/KeyRow";
 import Key from "@/components/Keys/Key";
 import SpecialKey, { TextPosition } from "@/components/Keys/SpecialKey";
 import SplitKey from "@/components/Keys/SplitKey";
-import ArrowDown from "@/components/Icons/ArrowDown";
-import ArrowUp from "@/components/Icons/ArrowUp";
-import ArrowLeft from "@/components/Icons/ArrowLeft";
-import ArrowRight from "@/components/Icons/ArrowRight";
-import Command from "@/components/Icons/Command";
-import Option from "@/components/Icons/Option";
-import Control from "@/components/Icons/Control";
+import qwertyKeyMap from "@/keyboards/qwertyKeyMap";
+import dvorakKeyMap from "@/keyboards/dvorakKeyMap";
+import colemakKeyMap from "@/keyboards/colemakKeyMap";
 
 type KeyboardProps = {
   pressedKeys: Set<string>;
 };
 
 const Keyboard = ({ pressedKeys }: KeyboardProps) => {
+  const keyMap = colemakKeyMap;
+
   return (
     <div className="flex flex-col gap-2 dark:text-gray-400 p-8">
       <KeyRow>
-        <Key text="`" shiftText="~" highlight={pressedKeys.has("Backquote")} />
-        <Key text="1" shiftText="!" highlight={pressedKeys.has("Digit1")} />
-        <Key text="2" shiftText="@" highlight={pressedKeys.has("Digit2")} />
-        <Key text="3" shiftText="#" highlight={pressedKeys.has("Digit3")} />
-        <Key text="4" shiftText="$" highlight={pressedKeys.has("Digit4")} />
-        <Key text="5" shiftText="%" highlight={pressedKeys.has("Digit5")} />
-        <Key text="6" shiftText="^" highlight={pressedKeys.has("Digit6")} />
-        <Key text="7" shiftText="&" highlight={pressedKeys.has("Digit7")} />
-        <Key text="8" shiftText="*" highlight={pressedKeys.has("Digit8")} />
-        <Key text="9" shiftText="(" highlight={pressedKeys.has("Digit9")} />
-        <Key text="0" shiftText=")" highlight={pressedKeys.has("Digit0")} />
-        <Key text="-" shiftText="_" highlight={pressedKeys.has("Minus")} />
-        <Key text="=" shiftText="+" highlight={pressedKeys.has("Equal")} />
+        <Key {...keyMap.Backquote} highlight={pressedKeys.has("Backquote")} />
+        <Key {...keyMap.Digit1} highlight={pressedKeys.has("Digit1")} />
+        <Key {...keyMap.Digit2} highlight={pressedKeys.has("Digit2")} />
+        <Key {...keyMap.Digit3} highlight={pressedKeys.has("Digit3")} />
+        <Key {...keyMap.Digit4} highlight={pressedKeys.has("Digit4")} />
+        <Key {...keyMap.Digit5} highlight={pressedKeys.has("Digit5")} />
+        <Key {...keyMap.Digit6} highlight={pressedKeys.has("Digit6")} />
+        <Key {...keyMap.Digit7} highlight={pressedKeys.has("Digit7")} />
+        <Key {...keyMap.Digit8} highlight={pressedKeys.has("Digit8")} />
+        <Key {...keyMap.Digit9} highlight={pressedKeys.has("Digit9")} />
+        <Key {...keyMap.Digit0} highlight={pressedKeys.has("Digit0")} />
+        <Key {...keyMap.Minus} highlight={pressedKeys.has("Minus")} />
+        <Key {...keyMap.Equal} highlight={pressedKeys.has("Equal")} />
         <SpecialKey
-          text="delete"
+          {...keyMap.Backspace}
           position={TextPosition.RIGHT}
           width="w-24"
           highlight={pressedKeys.has("Backspace")}
@@ -40,51 +38,49 @@ const Keyboard = ({ pressedKeys }: KeyboardProps) => {
       </KeyRow>
       <KeyRow>
         <SpecialKey
-          text="tab"
+          {...keyMap.Tab}
           width="w-24"
           highlight={pressedKeys.has("Tab")}
         />
-        <Key text="Q" highlight={pressedKeys.has("KeyQ")} />
-        <Key text="W" highlight={pressedKeys.has("KeyW")} />
-        <Key text="E" highlight={pressedKeys.has("KeyE")} />
-        <Key text="R" highlight={pressedKeys.has("KeyR")} />
-        <Key text="T" highlight={pressedKeys.has("KeyT")} />
-        <Key text="Y" highlight={pressedKeys.has("KeyY")} />
-        <Key text="U" highlight={pressedKeys.has("KeyU")} />
-        <Key text="I" highlight={pressedKeys.has("KeyI")} />
-        <Key text="O" highlight={pressedKeys.has("KeyO")} />
-        <Key text="P" highlight={pressedKeys.has("KeyP")} />
+        <Key {...keyMap.KeyQ} highlight={pressedKeys.has("KeyQ")} />
+        <Key {...keyMap.KeyW} highlight={pressedKeys.has("KeyW")} />
+        <Key {...keyMap.KeyE} highlight={pressedKeys.has("KeyE")} />
+        <Key {...keyMap.KeyR} highlight={pressedKeys.has("KeyR")} />
+        <Key {...keyMap.KeyT} highlight={pressedKeys.has("KeyT")} />
+        <Key {...keyMap.KeyY} highlight={pressedKeys.has("KeyY")} />
+        <Key {...keyMap.KeyU} highlight={pressedKeys.has("KeyU")} />
+        <Key {...keyMap.KeyI} highlight={pressedKeys.has("KeyI")} />
+        <Key {...keyMap.KeyO} highlight={pressedKeys.has("KeyO")} />
+        <Key {...keyMap.KeyP} highlight={pressedKeys.has("KeyP")} />
         <Key
-          text="["
-          shiftText="{"
+          {...keyMap.BracketLeft}
           highlight={pressedKeys.has("BracketLeft")}
         />
         <Key
-          text="]"
-          shiftText="}"
+          {...keyMap.BracketRight}
           highlight={pressedKeys.has("BracketRight")}
         />
-        <Key text="\" shiftText="|" highlight={pressedKeys.has("BackSlash")} />
+        <Key {...keyMap.BackSlash} highlight={pressedKeys.has("BackSlash")} />
       </KeyRow>
       <KeyRow>
         <SpecialKey
-          text="caps lock"
+          {...keyMap.CapsLock}
           width="w-[7.25rem]"
           highlight={pressedKeys.has("CapsLock")}
         />
-        <Key text="A" highlight={pressedKeys.has("KeyA")} />
-        <Key text="S" highlight={pressedKeys.has("KeyS")} />
-        <Key text="D" highlight={pressedKeys.has("KeyD")} />
-        <Key text="F" highlight={pressedKeys.has("KeyF")} bump />
-        <Key text="G" highlight={pressedKeys.has("KeyG")} />
-        <Key text="H" highlight={pressedKeys.has("KeyH")} />
-        <Key text="J" highlight={pressedKeys.has("KeyJ")} bump />
-        <Key text="K" highlight={pressedKeys.has("KeyK")} />
-        <Key text="L" highlight={pressedKeys.has("KeyL")} />
-        <Key text=";" shiftText=":" highlight={pressedKeys.has("Semicolon")} />
-        <Key text="'" shiftText='"' highlight={pressedKeys.has("Quote")} />
+        <Key {...keyMap.KeyA} highlight={pressedKeys.has("KeyA")} />
+        <Key {...keyMap.KeyS} highlight={pressedKeys.has("KeyS")} />
+        <Key {...keyMap.KeyD} highlight={pressedKeys.has("KeyD")} />
+        <Key {...keyMap.KeyF} highlight={pressedKeys.has("KeyF")} bump />
+        <Key {...keyMap.KeyG} highlight={pressedKeys.has("KeyG")} />
+        <Key {...keyMap.KeyH} highlight={pressedKeys.has("KeyH")} />
+        <Key {...keyMap.KeyJ} highlight={pressedKeys.has("KeyJ")} bump />
+        <Key {...keyMap.KeyK} highlight={pressedKeys.has("KeyK")} />
+        <Key {...keyMap.KeyL} highlight={pressedKeys.has("KeyL")} />
+        <Key {...keyMap.Semicolon} highlight={pressedKeys.has("Semicolon")} />
+        <Key {...keyMap.Quote} highlight={pressedKeys.has("Quote")} />
         <SpecialKey
-          text="return"
+          {...keyMap.Enter}
           position={TextPosition.RIGHT}
           width="w-[7.25rem]"
           highlight={pressedKeys.has("Enter")}
@@ -92,22 +88,22 @@ const Keyboard = ({ pressedKeys }: KeyboardProps) => {
       </KeyRow>
       <KeyRow>
         <SpecialKey
-          text="shift"
+          {...keyMap.ShiftLeft}
           width="w-[9.5rem]"
           highlight={pressedKeys.has("ShiftLeft")}
         />
-        <Key text="Z" highlight={pressedKeys.has("KeyZ")} />
-        <Key text="X" highlight={pressedKeys.has("KeyX")} />
-        <Key text="C" highlight={pressedKeys.has("KeyC")} />
-        <Key text="V" highlight={pressedKeys.has("KeyV")} />
-        <Key text="B" highlight={pressedKeys.has("KeyB")} />
-        <Key text="N" highlight={pressedKeys.has("KeyN")} />
-        <Key text="M" highlight={pressedKeys.has("KeyM")} />
-        <Key text="," shiftText="<" highlight={pressedKeys.has("Comma")} />
-        <Key text="." shiftText=">" highlight={pressedKeys.has("Period")} />
-        <Key text="/" shiftText="?" highlight={pressedKeys.has("Slash")} />
+        <Key {...keyMap.KeyZ} highlight={pressedKeys.has("KeyZ")} />
+        <Key {...keyMap.KeyX} highlight={pressedKeys.has("KeyX")} />
+        <Key {...keyMap.KeyC} highlight={pressedKeys.has("KeyC")} />
+        <Key {...keyMap.KeyV} highlight={pressedKeys.has("KeyV")} />
+        <Key {...keyMap.KeyB} highlight={pressedKeys.has("KeyB")} />
+        <Key {...keyMap.KeyN} highlight={pressedKeys.has("KeyN")} />
+        <Key {...keyMap.KeyM} highlight={pressedKeys.has("KeyM")} />
+        <Key {...keyMap.Comma} highlight={pressedKeys.has("Comma")} />
+        <Key {...keyMap.Period} highlight={pressedKeys.has("Period")} />
+        <Key {...keyMap.Slash} highlight={pressedKeys.has("Slash")} />
         <SpecialKey
-          text="shift"
+          {...keyMap.ShiftRight}
           position={TextPosition.RIGHT}
           width="w-[9.5rem]"
           highlight={pressedKeys.has("ShiftRight")}
@@ -116,51 +112,46 @@ const Keyboard = ({ pressedKeys }: KeyboardProps) => {
       <KeyRow>
         <SpecialKey text="fn" />
         <SpecialKey
-          text="control"
-          icon={<Control />}
+          {...keyMap.ControlLeft}
           highlight={pressedKeys.has("ControlLeft")}
         />
         <SpecialKey
-          text="option"
-          icon={<Option />}
+          {...keyMap.AltLeft}
           highlight={pressedKeys.has("AltLeft")}
         />
         <SpecialKey
-          text="command"
-          icon={<Command />}
+          {...keyMap.MetaLeft}
           width="w-20"
           highlight={pressedKeys.has("MetaLeft")}
         />
         <SpecialKey
-          text=""
+          {...keyMap.Space}
           width="w-[22rem]"
           highlight={pressedKeys.has("Space")}
         />
         <SpecialKey
-          text="command"
-          icon={<Command />}
+          {...keyMap.MetaRight}
           position={TextPosition.RIGHT}
           width="w-20"
           highlight={pressedKeys.has("MetaRight")}
         />
         <SpecialKey
-          text="option"
-          icon={<Option />}
+          {...keyMap.AltRight}
           position={TextPosition.RIGHT}
           highlight={pressedKeys.has("AltRight")}
         />
         <SplitKey
-          bottomText={<ArrowLeft />}
+          {...keyMap.ArrowLeft}
           highlightBottom={pressedKeys.has("ArrowLeft")}
         />
         <SplitKey
-          bottomText={<ArrowDown />}
-          topText={<ArrowUp />}
+          {...keyMap.ArrowDown}
+          {...keyMap.ArrowUp}
           highlightBottom={pressedKeys.has("ArrowDown")}
           highlightTop={pressedKeys.has("ArrowUp")}
         />
         <SplitKey
-          bottomText={<ArrowRight />}
+          {...keyMap.ArrowRight}
           highlightBottom={pressedKeys.has("ArrowRight")}
         />
       </KeyRow>

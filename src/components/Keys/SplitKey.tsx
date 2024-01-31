@@ -1,15 +1,13 @@
-import { ReactNode } from "react";
-
 type SplitKeyProps = {
-  bottomText?: ReactNode;
-  topText?: ReactNode;
+  BottomIcon?: () => JSX.Element;
+  TopIcon?: () => JSX.Element;
   highlightBottom?: boolean;
   highlightTop?: boolean;
 };
 
 const SplitKey = ({
-  bottomText,
-  topText,
+  BottomIcon,
+  TopIcon,
   highlightBottom,
   highlightTop,
 }: SplitKeyProps) => {
@@ -20,22 +18,22 @@ const SplitKey = ({
           highlightTop
             ? "bg-slate-600 dark:bg-gray-600 text-white dark:text-black"
             : "border-2"
-        } ${!topText ? "invisible" : ""} ${
-          topText && bottomText ? "rounded-t-md border-b-[1px]" : "rounded-md"
+        } ${!TopIcon ? "invisible" : ""} ${
+          TopIcon && BottomIcon ? "rounded-t-md border-b-[1px]" : "rounded-md"
         }`}
       >
-        {topText}
+        {TopIcon && <TopIcon />}
       </div>
       <div
         className={`h-1/2 flex items-center justify-center text-xs border-black dark:border-gray-600 ${
           highlightBottom
             ? "bg-slate-600 dark:bg-gray-600 text-white dark:text-black"
             : "border-2"
-        } ${!bottomText ? "invisible" : ""} ${
-          topText && bottomText ? "rounded-b-md border-t-[1px]" : "rounded-md"
+        } ${!BottomIcon ? "invisible" : ""} ${
+          TopIcon && BottomIcon ? "rounded-b-md border-t-[1px]" : "rounded-md"
         }`}
       >
-        {bottomText}
+        {BottomIcon && <BottomIcon />}
       </div>
     </div>
   );

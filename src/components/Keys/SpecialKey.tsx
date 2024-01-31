@@ -7,7 +7,7 @@ export enum TextPosition {
 
 type SpecialKeyProps = {
   text: string;
-  icon?: ReactNode;
+  Icon?: () => JSX.Element;
   position?: TextPosition;
   highlight?: boolean;
   width?: string;
@@ -15,7 +15,7 @@ type SpecialKeyProps = {
 
 const SpecialKey = ({
   text,
-  icon,
+  Icon,
   position,
   highlight,
   width,
@@ -35,7 +35,7 @@ const SpecialKey = ({
           position === TextPosition.RIGHT ? "" : "justify-end"
         }`}
       >
-        {icon}
+        {Icon ? <Icon /> : ""}
       </div>
       <div
         className={`h-1/2 flex items-end text-[0.8rem]  ${
