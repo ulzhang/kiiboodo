@@ -2,17 +2,13 @@ import KeyRow from "@/components/KeyRow";
 import Key from "@/components/Keys/Key";
 import SpecialKey, { TextPosition } from "@/components/Keys/SpecialKey";
 import SplitKey from "@/components/Keys/SplitKey";
-import qwertyKeyMap from "@/keyboards/qwertyKeyMap";
-import dvorakKeyMap from "@/keyboards/dvorakKeyMap";
-import colemakKeyMap from "@/keyboards/colemakKeyMap";
 
 type KeyboardProps = {
   pressedKeys: Set<string>;
+  keyMap: any;
 };
 
-const Keyboard = ({ pressedKeys }: KeyboardProps) => {
-  const keyMap = colemakKeyMap;
-
+const Keyboard = ({ pressedKeys, keyMap }: KeyboardProps) => {
   return (
     <div className="flex flex-col gap-2 dark:text-gray-400 p-8">
       <KeyRow>
