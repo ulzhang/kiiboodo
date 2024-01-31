@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Keyboard from "@/components/Keyboard";
 import KeyboardOption from "@/components/KeyboardOption";
+import TypeTest from "@/components/TypeTest";
 
 import qwertyKeyMap from "@/keyboards/qwertyKeyMap";
 import dvorakKeyMap from "@/keyboards/dvorakKeyMap";
@@ -23,14 +24,38 @@ const KeyMap = {
 const App = () => {
   const [pressedKeys, setPressedKeys] = useState(new Set<string>());
   const [keyboardLayout, setKeyboardLayout] = useState(KeyboardLayout.QWERTY);
+  const [typedText, setTypedText] = useState("");
+  const [shift, setShift] = useState(false);
+  const keyMap = KeyMap[keyboardLayout] as any;
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
+    console.log(event.code);
     event.preventDefault();
+    if (event.code === "ShiftLeft" || event.code === "ShiftRight") {
+      setShift(true);
+    }
     setPressedKeys((prev) => new Set(prev.add(event.code)));
+    setTypedText((prev) => {
+      if (event.code === "Backspace") {
+        if (prev.length === 0) {
+          return "";
+        }
+
+        return prev.slice(0, prev.length - 1);
+      }
+
+      if (shift) {
+        return prev + (keyMap[event.code].shiftValue || "");
+      }
+      return prev + (keyMap[event.code].value || "");
+    });
   };
 
   const handleKeyUp = (event: React.KeyboardEvent) => {
     event.preventDefault();
+    if (event.code === "ShiftLeft" || event.code === "ShiftRight") {
+      setShift(false);
+    }
     setPressedKeys((prev) => {
       prev.delete(event.code);
       return new Set(prev);
@@ -64,8 +89,11 @@ const App = () => {
           onClick={() => setKeyboardLayout(KeyboardLayout.COLEMAK)}
         />
       </div>
+      <div>
+        <TypeTest typedText={typedText} />
+      </div>
       <div className="w-full flex justify-center">
-        <Keyboard pressedKeys={pressedKeys} keyMap={KeyMap[keyboardLayout]} />
+        <Keyboard pressedKeys={pressedKeys} keyMap={keyMap} />
       </div>
     </div>
   );

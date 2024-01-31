@@ -56,7 +56,7 @@ const Keyboard = ({ pressedKeys, keyMap }: KeyboardProps) => {
           {...keyMap.BracketRight}
           highlight={pressedKeys.has("BracketRight")}
         />
-        <Key {...keyMap.BackSlash} highlight={pressedKeys.has("BackSlash")} />
+        <Key {...keyMap.Backslash} highlight={pressedKeys.has("Backslash")} />
       </KeyRow>
       <KeyRow>
         <SpecialKey
