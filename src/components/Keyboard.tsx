@@ -75,10 +75,10 @@ const Keyboard = ({ pressedKeys }: KeyboardProps) => {
         <Key text="A" highlight={pressedKeys.has("KeyA")} />
         <Key text="S" highlight={pressedKeys.has("KeyS")} />
         <Key text="D" highlight={pressedKeys.has("KeyD")} />
-        <Key text="F" highlight={pressedKeys.has("KeyF")} />
+        <Key text="F" highlight={pressedKeys.has("KeyF")} bump />
         <Key text="G" highlight={pressedKeys.has("KeyG")} />
         <Key text="H" highlight={pressedKeys.has("KeyH")} />
-        <Key text="J" highlight={pressedKeys.has("KeyJ")} />
+        <Key text="J" highlight={pressedKeys.has("KeyJ")} bump />
         <Key text="K" highlight={pressedKeys.has("KeyK")} />
         <Key text="L" highlight={pressedKeys.has("KeyL")} />
         <Key text=";" shiftText=":" highlight={pressedKeys.has("Semicolon")} />
