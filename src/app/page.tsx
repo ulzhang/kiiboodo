@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Keyboard from "@/components/Keyboard";
 import KeyboardOption from "@/components/KeyboardOption";
 import TypeTest from "@/components/TypeTest";
@@ -8,6 +8,7 @@ import TypeTest from "@/components/TypeTest";
 import qwertyKeyMap from "@/keyboards/qwertyKeyMap";
 import dvorakKeyMap from "@/keyboards/dvorakKeyMap";
 import colemakKeyMap from "@/keyboards/colemakKeyMap";
+import { words } from "@/words";
 
 enum KeyboardLayout {
   QWERTY,
@@ -22,40 +23,140 @@ const KeyMap = {
 };
 
 const App = () => {
-  const [pressedKeys, setPressedKeys] = useState(new Set<string>());
+  // Keyboard configuration
   const [keyboardLayout, setKeyboardLayout] = useState(KeyboardLayout.QWERTY);
-  const [typedText, setTypedText] = useState("");
-  const [shift, setShift] = useState(false);
   const keyMap = KeyMap[keyboardLayout] as any;
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    console.log(event.code);
-    event.preventDefault();
-    if (event.code === "ShiftLeft" || event.code === "ShiftRight") {
-      setShift(true);
+  // Keys that are currently pressed down. For visual keyboard
+  const [pressedKeys, setPressedKeys] = useState(new Set<string>());
+
+  const [shiftLeft, setShiftLeft] = useState(false);
+  const [shiftRight, setShiftRight] = useState(false);
+  const shift = shiftLeft || shiftRight;
+
+  // Store type test data
+  const [typeTestState, setTypeTestState] = useState({
+    finishedText: "", // Complete words that have been finished
+    typedText: "", // The text currently being typed
+    unfinishedText: "", // All text that is incomplete (including typedText)
+  });
+
+  useEffect(() => {
+    // Set type test to a set of random words
+    setTypeTestState({
+      finishedText: "",
+      typedText: "",
+      unfinishedText: words.sort(() => 0.5 - Math.random()).join(" "),
+    });
+  }, []);
+
+  useEffect(() => {
+    // Add more words to type if its running low
+    const { unfinishedText } = typeTestState;
+
+    if (unfinishedText !== "" && unfinishedText.length < 500) {
+      setTypeTestState((prev) => ({
+        ...prev,
+        unfinishedText:
+          prev.unfinishedText +
+          " " +
+          words.sort(() => 0.5 - Math.random()).join(" "),
+      }));
     }
-    setPressedKeys((prev) => new Set(prev.add(event.code)));
-    setTypedText((prev) => {
-      if (event.code === "Backspace") {
-        if (prev.length === 0) {
-          return "";
+  }, [typeTestState]);
+
+  const handleTypeTestKeyDown = (code: string) => {
+    if (code === "Backspace") {
+      // Remove 1 from typedText if applicable
+      setTypeTestState((prev) => {
+        if (prev.typedText.length === 0) {
+          return {
+            ...prev,
+          };
         }
 
-        return prev.slice(0, prev.length - 1);
-      }
+        return {
+          ...prev,
+          typedText: prev.typedText.slice(0, prev.typedText.length - 1),
+        };
+      });
+    } else if (code === "Space") {
+      setTypeTestState((prev) => {
+        const nextUnfinishedWord = prev.unfinishedText.slice(
+          0,
+          prev.unfinishedText.indexOf(" ")
+        );
 
-      if (shift) {
-        return prev + (keyMap[event.code].shiftValue || "");
-      }
-      return prev + (keyMap[event.code].value || "");
+        if (prev.typedText === nextUnfinishedWord) {
+          // Handle when a word is typed correctly by:
+          // 1. Remove word from unfinishedText
+          // 2. Add word to finishedText
+          // 3. Reset typedText
+          return {
+            finishedText: prev.finishedText + nextUnfinishedWord + " ",
+            typedText: "",
+            unfinishedText: prev.unfinishedText.slice(
+              prev.unfinishedText.indexOf(" ") + 1
+            ),
+          };
+        } else {
+          // If word is typed incorrectly, just add as usual
+          return {
+            ...prev,
+            typedText: prev.typedText + " ",
+          };
+        }
+      });
+    } else {
+      // Handle normal case when letter is typed
+      const typedLetter =
+        (shift ? keyMap[code].shiftValue : keyMap[code].value) || "";
+
+      setTypeTestState((prev) => ({
+        ...prev,
+        typedText: prev.typedText + typedLetter,
+      }));
+    }
+  };
+
+  // Handle new line
+  const handleNewLine = () => {
+    setTypeTestState((prev) => {
+      return {
+        ...prev,
+        finishedText: "",
+      };
     });
+  };
+
+  // KeyboardEvent Handlers
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    event.preventDefault();
+
+    if (event.code === "ShiftLeft") {
+      setShiftLeft(true);
+    }
+    if (event.code === "ShiftRight") {
+      setShiftRight(true);
+    }
+
+    // Set highlighted key on visual keyboard
+    setPressedKeys((prev) => new Set(prev.add(event.code)));
+
+    handleTypeTestKeyDown(event.code);
   };
 
   const handleKeyUp = (event: React.KeyboardEvent) => {
     event.preventDefault();
-    if (event.code === "ShiftLeft" || event.code === "ShiftRight") {
-      setShift(false);
+
+    if (event.code === "ShiftLeft") {
+      setShiftLeft(false);
     }
+    if (event.code === "ShiftRight") {
+      setShiftRight(false);
+    }
+
+    // Unset highlighted key on visual keyboard
     setPressedKeys((prev) => {
       prev.delete(event.code);
       return new Set(prev);
@@ -64,12 +165,12 @@ const App = () => {
 
   return (
     <div
-      className="p-12 w-screen h-screen"
+      className="p-12 w-screen max-w-6xl m-auto outline-0"
       tabIndex={-1}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
     >
-      <div className="flex gap-4">
+      <div className="flex gap-4 mb-4">
         <KeyboardOption
           name="QWERTY"
           description="The de facto keyboard layout since 1873, when it was first used in typewriters."
@@ -89,10 +190,15 @@ const App = () => {
           onClick={() => setKeyboardLayout(KeyboardLayout.COLEMAK)}
         />
       </div>
-      <div>
-        <TypeTest typedText={typedText} />
+      <div className="mb-4">
+        <TypeTest
+          finishedText={typeTestState.finishedText}
+          typedText={typeTestState.typedText}
+          unfinishedText={typeTestState.unfinishedText}
+          handleNewLine={handleNewLine}
+        />
       </div>
-      <div className="w-full flex justify-center">
+      <div className="w-full flex justify-center mb-4">
         <Keyboard pressedKeys={pressedKeys} keyMap={keyMap} />
       </div>
     </div>

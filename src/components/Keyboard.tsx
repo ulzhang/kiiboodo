@@ -10,7 +10,7 @@ type KeyboardProps = {
 
 const Keyboard = ({ pressedKeys, keyMap }: KeyboardProps) => {
   return (
-    <div className="flex flex-col gap-2 dark:text-gray-400 p-8">
+    <div className="flex flex-col gap-2 dark:text-gray-400 select-none">
       <KeyRow>
         <Key {...keyMap.Backquote} highlight={pressedKeys.has("Backquote")} />
         <Key {...keyMap.Digit1} highlight={pressedKeys.has("Digit1")} />

@@ -9,10 +9,15 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      keyframes: {
+        blink: {
+          "0%": { borderColor: "black" },
+          "50%": { borderColor: "white" },
+          "100%": { borderColor: "black" },
+        },
+      },
+      animation: {
+        cursor: "blink 1s linear infinite",
       },
     },
   },

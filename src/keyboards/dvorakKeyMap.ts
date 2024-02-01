@@ -136,7 +136,7 @@ const dvorakKeyMap = {
   },
   KeyO: {
     text: "R",
-    value: "R",
+    value: "r",
     shiftValue: "R",
   },
   KeyP: {
