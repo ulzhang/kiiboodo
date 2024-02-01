@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { isBrowser } from "react-device-detect";
+import { isMobile, isTablet } from "react-device-detect";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,11 +34,12 @@ export default function RootLayout({
       </Script>
       <body className={inter.className}>
         {children}
-        {!isBrowser && (
-          <p className="fixed w-full bg-blue-900 bottom-0 text-center py-2 text-lg">
-            Sorry, this doesn&apos;t really work on mobile yet 😿
-          </p>
-        )}
+        {isMobile ||
+          (isTablet && (
+            <p className="fixed w-full bg-blue-900 bottom-0 text-center py-2 text-lg">
+              Sorry, this doesn&apos;t really work on mobile yet 😿
+            </p>
+          ))}
       </body>
     </html>
   );
