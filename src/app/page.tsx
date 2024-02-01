@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Keyboard from "@/components/Keyboard";
 import KeyboardOption from "@/components/KeyboardOption";
 import TypeTest from "@/components/TypeTest";
@@ -9,6 +9,7 @@ import qwertyKeyMap from "@/keyboards/qwertyKeyMap";
 import dvorakKeyMap from "@/keyboards/dvorakKeyMap";
 import colemakKeyMap from "@/keyboards/colemakKeyMap";
 import { words } from "@/words";
+import LightBulb from "@/components/Icons/LightBulb";
 
 enum KeyboardLayout {
   QWERTY,
@@ -34,12 +35,53 @@ const App = () => {
   const [shiftRight, setShiftRight] = useState(false);
   const shift = shiftLeft || shiftRight;
 
+  // Store if should show hints
+  const [showHints, setShowHints] = useState(false);
+
+  const getHintKey = () => {
+    if (!showHints) {
+      return undefined;
+    }
+
+    if (incorrectText.length > 0) {
+      return "Backspace";
+    }
+
+    return Object.keys(keyMap).find(
+      (key) =>
+        keyMap[key].value === restText[0] ||
+        keyMap[key].shiftValue === restText[0]
+    );
+  };
+
   // Store type test data
   const [typeTestState, setTypeTestState] = useState({
     finishedText: "", // Complete words that have been finished
     typedText: "", // The text currently being typed
     unfinishedText: "", // All text that is incomplete (including typedText)
   });
+  const { correctText, incorrectText, restText } = useMemo(() => {
+    const { typedText, unfinishedText } = typeTestState;
+
+    // Find the index of the first incorrect character in typedText
+    let incorrectIndex = 0;
+    while (
+      incorrectIndex < typedText.length &&
+      incorrectIndex < unfinishedText.length &&
+      typedText[incorrectIndex] === unfinishedText[incorrectIndex]
+    ) {
+      incorrectIndex++;
+    }
+
+    // Handle logic to display typed text correctly
+    const correctText = typedText.slice(0, incorrectIndex);
+    const incorrectText = typedText
+      .slice(incorrectIndex)
+      .replace(/ /g, "\u00A0");
+    const restText = unfinishedText.slice(incorrectIndex);
+
+    return { correctText, incorrectText, restText };
+  }, [typeTestState]);
 
   useEffect(() => {
     // Set type test to a set of random words
@@ -170,7 +212,7 @@ const App = () => {
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
     >
-      <div className="flex gap-4 mb-4">
+      <div className="flex gap-4 mb-4 relative">
         <KeyboardOption
           name="QWERTY"
           description="The de facto keyboard layout since 1873, when it was first used in typewriters."
@@ -189,17 +231,28 @@ const App = () => {
           highlight={keyboardLayout === KeyboardLayout.COLEMAK}
           onClick={() => setKeyboardLayout(KeyboardLayout.COLEMAK)}
         />
+        <button
+          className="absolute top-0 right-0"
+          onClick={() => setShowHints((prev) => !prev)}
+        >
+          <LightBulb lit={showHints} />
+        </button>
       </div>
       <div className="mb-4">
         <TypeTest
           finishedText={typeTestState.finishedText}
-          typedText={typeTestState.typedText}
-          unfinishedText={typeTestState.unfinishedText}
+          correctText={correctText}
+          incorrectText={incorrectText}
+          restText={restText}
           handleNewLine={handleNewLine}
         />
       </div>
       <div className="w-full flex justify-center mb-4">
-        <Keyboard pressedKeys={pressedKeys} keyMap={keyMap} />
+        <Keyboard
+          pressedKeys={pressedKeys}
+          keyMap={keyMap}
+          hintKey={getHintKey()}
+        />
       </div>
     </div>
   );

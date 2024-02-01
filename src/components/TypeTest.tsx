@@ -5,8 +5,9 @@ import { useRef, useState, useEffect, forwardRef } from "react";
 
 type TypeTestProps = {
   finishedText: string;
-  typedText: string;
-  unfinishedText: string;
+  correctText: string;
+  incorrectText: string;
+  restText: string;
   handleNewLine: () => void;
 };
 
@@ -31,25 +32,11 @@ const Letter = forwardRef<HTMLSpanElement, LetterProps>(
 
 const TypeTest = ({
   finishedText,
-  typedText,
-  unfinishedText,
+  correctText,
+  incorrectText,
+  restText,
   handleNewLine,
 }: TypeTestProps) => {
-  // Find the index of the first incorrect character in typedText
-  let incorrectIndex = 0;
-  while (
-    incorrectIndex < typedText.length &&
-    incorrectIndex < unfinishedText.length &&
-    typedText[incorrectIndex] === unfinishedText[incorrectIndex]
-  ) {
-    incorrectIndex++;
-  }
-
-  // Handle logic to display typed text correctly
-  const correctText = typedText.slice(0, incorrectIndex);
-  const incorrectText = typedText.slice(incorrectIndex).replace(/ /g, "\u00A0");
-  const restText = unfinishedText.slice(incorrectIndex);
-
   // Create refs to find when newlines start
   const ref = useRef<HTMLSpanElement>(null);
   const [yPosition, setYPosition] = useState(0);
@@ -58,9 +45,9 @@ const TypeTest = ({
     const newYPosition = ref.current?.offsetTop || 0;
 
     if (
-      newYPosition > yPosition &&
-      yPosition !== 0 &&
-      incorrectText.length === 0
+      newYPosition > yPosition && // Went down to next line
+      yPosition !== 0 && // Not an initialization
+      incorrectText.length === 0 // If incorrect letters are typed, we don't want to newline
     ) {
       handleNewLine();
     }

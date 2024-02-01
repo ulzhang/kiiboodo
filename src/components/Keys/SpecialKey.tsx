@@ -10,6 +10,7 @@ type SpecialKeyProps = {
   Icon?: () => JSX.Element;
   position?: TextPosition;
   highlight?: boolean;
+  hint?: boolean;
   width?: string;
 };
 
@@ -18,6 +19,7 @@ const SpecialKey = ({
   Icon,
   position,
   highlight,
+  hint,
   width,
 }: SpecialKeyProps) => {
   return (
@@ -28,7 +30,7 @@ const SpecialKey = ({
         highlight
           ? "bg-slate-600 dark:bg-gray-600 text-white dark:text-black border-0"
           : "border-2 border-black dark:border-gray-600"
-      }`}
+      } ${hint && !highlight ? "bg-yellow-500" : ""}`}
     >
       <div
         className={`h-1/2 flex items-start text-[0.8rem]  ${
