@@ -17,8 +17,11 @@ type LetterProps = {
   incorrect?: boolean;
 };
 
-const Letter = forwardRef<HTMLSpanElement, LetterProps>(
-  ({ children, current, incorrect }, ref) => (
+const Letter = forwardRef<HTMLSpanElement, LetterProps>(function Letter(
+  { children, current, incorrect },
+  ref
+) {
+  return (
     <span
       ref={ref}
       className={`border-l-2 ${
@@ -29,8 +32,8 @@ const Letter = forwardRef<HTMLSpanElement, LetterProps>(
     >
       {children}
     </span>
-  )
-);
+  );
+});
 
 const TypeTest = ({
   finishedText,
