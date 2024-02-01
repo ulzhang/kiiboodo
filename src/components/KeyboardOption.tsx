@@ -13,10 +13,10 @@ const KeyboardOption = ({
 }: KeyboardOptionProps) => {
   return (
     <div
-      className={`w-64 rounded-xl p-4 border-2 cursor-pointer transition ${
+      className={`max-w-64 rounded-xl p-4 border-2 cursor-pointer transition flex-1 ${
         highlight
-          ? "border-black text-black"
-          : "border-gray-400 text-gray-700 hover:shadow-lg ease-in-out duration-300"
+          ? "border-black dark:border-gray-400 text-black dark:text-gray-400"
+          : "border-gray-400 dark:border-gray-600 text-gray-600 hover:shadow-lg ease-in-out duration-300"
       }`}
       onClick={onClick}
     >

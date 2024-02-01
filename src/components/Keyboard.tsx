@@ -11,7 +11,7 @@ type KeyboardProps = {
 
 const Keyboard = ({ pressedKeys, keyMap, hintKey }: KeyboardProps) => {
   return (
-    <div className="flex flex-col gap-2 dark:text-gray-400 select-none">
+    <div className="flex flex-col gap-2 dark:text-gray-400 select-none origin-top scale-50 md:scale-[0.6] min-[900px]:scale-75 lg:scale-90 xl:scale-100">
       <KeyRow>
         <Key
           {...keyMap.Backquote}

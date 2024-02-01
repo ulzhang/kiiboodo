@@ -22,8 +22,10 @@ const Letter = forwardRef<HTMLSpanElement, LetterProps>(
     <span
       ref={ref}
       className={`border-l-2 ${
-        current ? "border-black animate-cursor" : "border-transparent"
-      } ${incorrect ? "bg-red-100" : ""}`}
+        current
+          ? "border-black animate-cursor dark:animate-cursor-dark"
+          : "border-transparent"
+      } ${incorrect ? "bg-red-100 dark:bg-red-950" : ""}`}
     >
       {children}
     </span>
@@ -56,7 +58,7 @@ const TypeTest = ({
   }, [ref.current?.offsetTop]);
 
   return (
-    <p className="text-2xl leading-relaxed tracking-tighter	h-[5rem] overflow-hidden select-none">
+    <p className="text-2xl leading-relaxed tracking-tighter	h-[5rem] overflow-hidden select-none dark:text-gray-400">
       <span>
         {finishedText.split("").map((letter, index) => (
           <Letter key={`finished-${letter}-${index}`}>{letter}</Letter>
@@ -67,14 +69,14 @@ const TypeTest = ({
           <Letter key={`correct-${letter}-${index}`}>{letter}</Letter>
         ))}
       </span>
-      <span className="text-red-500">
+      <span className="text-red-600 dark:text-red-400">
         {incorrectText.split("").map((letter, index) => (
           <Letter incorrect key={`incorrect-${letter}-${index}`}>
             {letter}
           </Letter>
         ))}
       </span>
-      <span className="text-gray-600 ">
+      <span className="text-gray-500 dark:text-gray-600">
         {restText.split("").map((letter, index) => (
           <Letter
             current={index === 0}

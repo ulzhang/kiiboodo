@@ -208,36 +208,42 @@ const App = () => {
   return (
     <div
       className="p-12 w-screen max-w-6xl m-auto outline-0"
+      autoFocus
       tabIndex={-1}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
     >
-      <div className="flex gap-4 mb-4 relative">
-        <KeyboardOption
-          name="QWERTY"
-          description="The de facto keyboard layout since 1873, when it was first used in typewriters."
-          highlight={keyboardLayout === KeyboardLayout.QWERTY}
-          onClick={() => setKeyboardLayout(KeyboardLayout.QWERTY)}
-        />
-        <KeyboardOption
-          name="Dvorak"
-          description="Designed for a fast and ergonomic typing experience."
-          highlight={keyboardLayout === KeyboardLayout.DVORAK}
-          onClick={() => setKeyboardLayout(KeyboardLayout.DVORAK)}
-        />
-        <KeyboardOption
-          name="Colemak"
-          description="Resembles QWERTY while being more efficient and comfortable."
-          highlight={keyboardLayout === KeyboardLayout.COLEMAK}
-          onClick={() => setKeyboardLayout(KeyboardLayout.COLEMAK)}
-        />
-        <button
-          className="absolute top-0 right-0"
-          onClick={() => setShowHints((prev) => !prev)}
-        >
-          <LightBulb lit={showHints} />
-        </button>
+      <div className="mb-4 flex items-start gap-8">
+        <div className="flex gap-4 mb-4 shrink">
+          <KeyboardOption
+            name="QWERTY"
+            description="The de facto keyboard layout since 1873, when it was first used in typewriters."
+            highlight={keyboardLayout === KeyboardLayout.QWERTY}
+            onClick={() => setKeyboardLayout(KeyboardLayout.QWERTY)}
+          />
+          <KeyboardOption
+            name="Dvorak"
+            description="Designed for a fast and ergonomic typing experience."
+            highlight={keyboardLayout === KeyboardLayout.DVORAK}
+            onClick={() => setKeyboardLayout(KeyboardLayout.DVORAK)}
+          />
+          <KeyboardOption
+            name="Colemak"
+            description="Resembles QWERTY while being more efficient and comfortable."
+            highlight={keyboardLayout === KeyboardLayout.COLEMAK}
+            onClick={() => setKeyboardLayout(KeyboardLayout.COLEMAK)}
+          />
+        </div>
+        <div className="text-right shrink-0 grow">
+          <button
+            className="outline-0"
+            onClick={() => setShowHints((prev) => !prev)}
+          >
+            <LightBulb lit={showHints} />
+          </button>
+        </div>
       </div>
+
       <div className="mb-4">
         <TypeTest
           finishedText={typeTestState.finishedText}

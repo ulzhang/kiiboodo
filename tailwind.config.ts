@@ -15,9 +15,15 @@ const config: Config = {
           "50%": { borderColor: "white" },
           "100%": { borderColor: "black" },
         },
+        "blink-dark": {
+          "0%": { borderColor: "black" },
+          "50%": { borderColor: "rgb(156 163 175)" },
+          "100%": { borderColor: "black" },
+        },
       },
       animation: {
         cursor: "blink 1s linear infinite",
+        "cursor-dark": "blink-dark 1s linear infinite",
       },
     },
   },
