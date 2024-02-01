@@ -36,7 +36,7 @@ export default function RootLayout({
         {children}
         {!isBrowser && (
           <p className="fixed w-full bg-blue-900 bottom-0 text-center py-2 text-lg">
-            Sorry, this doesn't really work on mobile yet 😿
+            Sorry, this doesn&apos;t really work on mobile yet 😿
           </p>
         )}
       </body>
