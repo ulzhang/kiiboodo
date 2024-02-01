@@ -28,10 +28,10 @@ const SpecialKey = ({
         width ? width : "w-16"
       } ${
         highlight
-          ? "bg-slate-600 dark:bg-gray-600 text-white dark:text-black border-0"
+          ? "bg-slate-600 dark:bg-gray-500 text-white dark:text-black border-0"
           : hint
           ? "bg-yellow-500 dark:bg-yellow-600 dark:text-black dark:border-0"
-          : "border-2 border-black dark:border-gray-600"
+          : "border-2 border-black dark:border-gray-500"
       }`}
     >
       <div

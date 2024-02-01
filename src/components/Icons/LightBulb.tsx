@@ -6,8 +6,10 @@ const LightBulb = ({ lit }: { lit?: boolean }) => {
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
-      className={`size-8 dark:text-gray-400 ${
-        lit ? "text-yellow-500 dark:text-yellow-600" : ""
+      className={`size-8 ${
+        lit
+          ? "text-yellow-500 dark:text-yellow-600"
+          : "text-gray-400 dark:text-gray-500"
       }`}
     >
       <path

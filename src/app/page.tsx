@@ -35,6 +35,10 @@ const App = () => {
   const [shiftRight, setShiftRight] = useState(false);
   const shift = shiftLeft || shiftRight;
 
+  const [metaLeft, setMetaLeft] = useState(false);
+  const [metaRight, setMetaRight] = useState(false);
+  const meta = metaLeft || metaRight;
+
   // Store if should show hints
   const [showHints, setShowHints] = useState(false);
 
@@ -150,6 +154,11 @@ const App = () => {
         }
       });
     } else {
+      if (meta) {
+        // If performing a command, ignore the typed letter
+        return;
+      }
+
       // Handle normal case when letter is typed
       const typedLetter =
         (shift ? keyMap[code].shiftValue : keyMap[code].value) || "";
@@ -173,13 +182,17 @@ const App = () => {
 
   // KeyboardEvent Handlers
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    event.preventDefault();
-
     if (event.code === "ShiftLeft") {
       setShiftLeft(true);
     }
     if (event.code === "ShiftRight") {
       setShiftRight(true);
+    }
+    if (event.code === "MetaLeft") {
+      setMetaLeft(true);
+    }
+    if (event.code === "MetaRight") {
+      setMetaRight(true);
     }
 
     // Set highlighted key on visual keyboard
@@ -189,13 +202,17 @@ const App = () => {
   };
 
   const handleKeyUp = (event: React.KeyboardEvent) => {
-    event.preventDefault();
-
     if (event.code === "ShiftLeft") {
       setShiftLeft(false);
     }
     if (event.code === "ShiftRight") {
       setShiftRight(false);
+    }
+    if (event.code === "MetaLeft") {
+      setMetaLeft(false);
+    }
+    if (event.code === "MetaRight") {
+      setMetaRight(false);
     }
 
     // Unset highlighted key on visual keyboard
@@ -207,7 +224,7 @@ const App = () => {
 
   return (
     <div
-      className="p-12 w-screen max-w-6xl m-auto outline-0"
+      className="p-12 w-screen h-screen max-w-6xl m-auto outline-none"
       autoFocus
       tabIndex={-1}
       onKeyDown={handleKeyDown}
@@ -236,8 +253,10 @@ const App = () => {
         </div>
         <div className="text-right shrink-0 grow">
           <button
-            className="outline-0"
+            tabIndex={-1}
+            className="outline-none"
             onClick={() => setShowHints((prev) => !prev)}
+            onKeyUp={(e) => e.preventDefault()}
           >
             <LightBulb lit={showHints} />
           </button>

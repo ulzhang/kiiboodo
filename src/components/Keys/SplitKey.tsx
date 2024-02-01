@@ -14,9 +14,9 @@ const SplitKey = ({
   return (
     <div className="shrink-0 grow-0 size-16">
       <div
-        className={`h-1/2 flex items-center justify-center text-xs border-black dark:border-gray-600 ${
+        className={`h-1/2 flex items-center justify-center text-xs border-black dark:border-gray-500 ${
           highlightTop
-            ? "bg-slate-600 dark:bg-gray-600 text-white dark:text-black"
+            ? "bg-slate-600 dark:bg-gray-500 text-white dark:text-black"
             : "border-2"
         } ${!TopIcon ? "invisible" : ""} ${
           TopIcon && BottomIcon ? "rounded-t-md border-b-[1px]" : "rounded-md"
@@ -25,9 +25,9 @@ const SplitKey = ({
         {TopIcon && <TopIcon />}
       </div>
       <div
-        className={`h-1/2 flex items-center justify-center text-xs border-black dark:border-gray-600 ${
+        className={`h-1/2 flex items-center justify-center text-xs border-black dark:border-gray-500 ${
           highlightBottom
-            ? "bg-slate-600 dark:bg-gray-600 text-white dark:text-black"
+            ? "bg-slate-600 dark:bg-gray-500 text-white dark:text-black"
             : "border-2"
         } ${!BottomIcon ? "invisible" : ""} ${
           TopIcon && BottomIcon ? "rounded-b-md border-t-[1px]" : "rounded-md"
