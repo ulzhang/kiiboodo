@@ -243,7 +243,7 @@ const App = () => {
         <div className="flex gap-4 mb-4 shrink">
           <KeyboardOption
             name="QWERTY"
-            description="The de facto keyboard layout since 1873, when it was first used in typewriters."
+            description="The standard format. Designed to minimize typewriter jams."
             highlight={keyboardLayout === KeyboardLayout.QWERTY}
             onClick={() => setKeyboardLayout(KeyboardLayout.QWERTY)}
           />
