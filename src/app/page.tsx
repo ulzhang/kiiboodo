@@ -39,6 +39,14 @@ const App = () => {
   const [metaRight, setMetaRight] = useState(false);
   const meta = metaLeft || metaRight;
 
+  const resetKeys = () => {
+    setPressedKeys(new Set());
+    setShiftLeft(false);
+    setShiftRight(false);
+    setMetaLeft(false);
+    setMetaRight(false);
+  };
+
   // Store if should show hints
   const [showHints, setShowHints] = useState(false);
 
@@ -226,9 +234,10 @@ const App = () => {
     <div
       className="p-12 w-screen h-screen max-w-6xl m-auto outline-none"
       autoFocus
-      tabIndex={-1}
+      tabIndex={0}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
+      onBlur={() => resetKeys()}
     >
       <div className="mb-4 flex items-start gap-8">
         <div className="flex gap-4 mb-4 shrink">
