@@ -1,15 +1,19 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import dynamic from "next/dynamic";
 import Keyboard from "@/components/Keyboard";
 import KeyboardOption from "@/components/KeyboardOption";
 import TypeTest from "@/components/TypeTest";
-
 import qwertyKeyMap from "@/keyboards/qwertyKeyMap";
 import dvorakKeyMap from "@/keyboards/dvorakKeyMap";
 import colemakKeyMap from "@/keyboards/colemakKeyMap";
 import { words } from "@/words";
 import LightBulb from "@/components/Icons/LightBulb";
+
+const MobileBanner = dynamic(() => import("@/components/MobileBanner"), {
+  ssr: false,
+});
 
 enum KeyboardLayout {
   QWERTY,
@@ -231,62 +235,65 @@ const App = () => {
   };
 
   return (
-    <div
-      className="p-12 w-screen h-screen max-w-6xl m-auto outline-none"
-      autoFocus
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-      onKeyUp={handleKeyUp}
-      onBlur={() => resetKeys()}
-    >
-      <div className="mb-4 flex items-start gap-8">
-        <div className="flex gap-4 mb-4 shrink">
-          <KeyboardOption
-            name="QWERTY"
-            description="The standard format. Designed to minimize typewriter jams."
-            highlight={keyboardLayout === KeyboardLayout.QWERTY}
-            onClick={() => setKeyboardLayout(KeyboardLayout.QWERTY)}
-          />
-          <KeyboardOption
-            name="Dvorak"
-            description="Designed for a fast and ergonomic typing experience."
-            highlight={keyboardLayout === KeyboardLayout.DVORAK}
-            onClick={() => setKeyboardLayout(KeyboardLayout.DVORAK)}
-          />
-          <KeyboardOption
-            name="Colemak"
-            description="Resembles QWERTY while being more efficient and comfortable."
-            highlight={keyboardLayout === KeyboardLayout.COLEMAK}
-            onClick={() => setKeyboardLayout(KeyboardLayout.COLEMAK)}
-          />
+    <div>
+      <MobileBanner />
+      <div
+        className="p-12 w-screen h-screen max-w-6xl m-auto outline-none"
+        autoFocus
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
+        onBlur={() => resetKeys()}
+      >
+        <div className="mb-4 flex items-start gap-8">
+          <div className="flex gap-4 mb-4 shrink">
+            <KeyboardOption
+              name="QWERTY"
+              description="The standard format. Designed to minimize typewriter jams."
+              highlight={keyboardLayout === KeyboardLayout.QWERTY}
+              onClick={() => setKeyboardLayout(KeyboardLayout.QWERTY)}
+            />
+            <KeyboardOption
+              name="Dvorak"
+              description="Designed for a fast and ergonomic typing experience."
+              highlight={keyboardLayout === KeyboardLayout.DVORAK}
+              onClick={() => setKeyboardLayout(KeyboardLayout.DVORAK)}
+            />
+            <KeyboardOption
+              name="Colemak"
+              description="Resembles QWERTY while being more efficient and comfortable."
+              highlight={keyboardLayout === KeyboardLayout.COLEMAK}
+              onClick={() => setKeyboardLayout(KeyboardLayout.COLEMAK)}
+            />
+          </div>
+          <div className="text-right shrink-0 grow">
+            <button
+              tabIndex={-1}
+              className="outline-none"
+              onClick={() => setShowHints((prev) => !prev)}
+              onKeyUp={(e) => e.preventDefault()}
+            >
+              <LightBulb lit={showHints} />
+            </button>
+          </div>
         </div>
-        <div className="text-right shrink-0 grow">
-          <button
-            tabIndex={-1}
-            className="outline-none"
-            onClick={() => setShowHints((prev) => !prev)}
-            onKeyUp={(e) => e.preventDefault()}
-          >
-            <LightBulb lit={showHints} />
-          </button>
-        </div>
-      </div>
 
-      <div className="mb-4">
-        <TypeTest
-          finishedText={typeTestState.finishedText}
-          correctText={correctText}
-          incorrectText={incorrectText}
-          restText={restText}
-          handleNewLine={handleNewLine}
-        />
-      </div>
-      <div className="w-full flex justify-center mb-4">
-        <Keyboard
-          pressedKeys={pressedKeys}
-          keyMap={keyMap}
-          hintKey={getHintKey()}
-        />
+        <div className="mb-4">
+          <TypeTest
+            finishedText={typeTestState.finishedText}
+            correctText={correctText}
+            incorrectText={incorrectText}
+            restText={restText}
+            handleNewLine={handleNewLine}
+          />
+        </div>
+        <div className="w-full flex justify-center mb-4">
+          <Keyboard
+            pressedKeys={pressedKeys}
+            keyMap={keyMap}
+            hintKey={getHintKey()}
+          />
+        </div>
       </div>
     </div>
   );
