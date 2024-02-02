@@ -64,17 +64,19 @@ const TypeTest = ({
     <p className="text-2xl leading-relaxed tracking-tighter	h-[5rem] overflow-hidden select-none dark:text-gray-300">
       <span>
         {finishedText.split("").map((letter, index) => (
-          <Letter key={`finished-${letter}-${index}`}>{letter}</Letter>
+          <Letter key={`${letter}-${index}`}>{letter}</Letter>
         ))}
       </span>
       <span>
         {correctText.split("").map((letter, index) => (
-          <Letter key={`correct-${letter}-${index}`}>{letter}</Letter>
+          <Letter key={`${letter}-${finishedText.length + index}`}>
+            {letter}
+          </Letter>
         ))}
       </span>
       <span className="text-red-600 dark:text-red-400">
         {incorrectText.split("").map((letter, index) => (
-          <Letter incorrect key={`incorrect-${letter}-${index}`}>
+          <Letter incorrect key={`${letter}-${index}`}>
             {letter}
           </Letter>
         ))}
@@ -84,7 +86,9 @@ const TypeTest = ({
           <Letter
             current={index === 0}
             ref={index === 0 ? ref : undefined}
-            key={`rest-${letter}-${index}`}
+            key={`${letter}-${
+              finishedText.length + correctText.length + index
+            }`}
           >
             {letter}
           </Letter>
