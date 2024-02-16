@@ -124,7 +124,32 @@ const App = () => {
   }, [typeTestState]);
 
   const handleTypeTestKeyDown = (code: string) => {
-    if (code === "Backspace") {
+    if (code === "Backspace" && meta) {
+      // Special feature, remove all incorrect text on cmd + backspace
+      setTypeTestState((prev) => {
+        // Find the index of the first incorrect character in typedText
+        let incorrectIndex = 0;
+        while (
+          incorrectIndex < prev.typedText.length &&
+          incorrectIndex < prev.unfinishedText.length &&
+          prev.typedText[incorrectIndex] === prev.unfinishedText[incorrectIndex]
+        ) {
+          incorrectIndex++;
+        }
+
+        return {
+          ...prev,
+          typedText: prev.typedText.slice(0, incorrectIndex),
+        };
+      });
+
+      // When you cmd+key, the key stays down
+      // this is to artificially KeyUp the Backspace button
+      setPressedKeys((prev) => {
+        prev.delete("Backspace");
+        return new Set(prev);
+      });
+    } else if (code === "Backspace") {
       // Remove 1 from typedText if applicable
       setTypeTestState((prev) => {
         if (prev.typedText.length === 0) {
