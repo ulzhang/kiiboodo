@@ -8,7 +8,7 @@ import TypeTest from "@/components/TypeTest";
 import qwertyKeyMap from "@/keyboards/qwertyKeyMap";
 import dvorakKeyMap from "@/keyboards/dvorakKeyMap";
 import colemakKeyMap from "@/keyboards/colemakKeyMap";
-import { words } from "@/words";
+import { romanjiMap } from "@/words";
 import LightBulb from "@/components/Icons/LightBulb";
 
 const MobileBanner = dynamic(() => import("@/components/MobileBanner"), {
@@ -76,6 +76,7 @@ const App = () => {
     typedText: "", // The text currently being typed
     unfinishedText: "", // All text that is incomplete (including typedText)
   });
+
   const { correctText, incorrectText, restText } = useMemo(() => {
     const { typedText, unfinishedText } = typeTestState;
 
@@ -100,11 +101,20 @@ const App = () => {
   }, [typeTestState]);
 
   useEffect(() => {
-    // Set type test to a set of random words
+    // Get an array of the keys from romanjiMap
+    const keys = Object.keys(romanjiMap);
+
+    // Randomize the order of the keys
+    const randomizedKeys = keys.sort(() => 0.5 - Math.random());
+
+    // Optionally, convert these keys to their hiragana equivalents if needed
+    const hiraganaWords = randomizedKeys.map((key) => romanjiMap[key].hiragana);
+
+    // Set the type test state with the randomized keys (or their hiragana equivalents) joined into a string
     setTypeTestState({
       finishedText: "",
       typedText: "",
-      unfinishedText: words.sort(() => 0.5 - Math.random()).join(" "),
+      unfinishedText: randomizedKeys.join(" "), // Use randomizedKeys.join(" ") if you want the romanji instead
     });
   }, []);
 
@@ -112,13 +122,16 @@ const App = () => {
     // Add more words to type if its running low
     const { unfinishedText } = typeTestState;
 
+    // Get an array of the keys from romanjiMap
+    const keys = Object.keys(romanjiMap);
+
     if (unfinishedText !== "" && unfinishedText.length < 500) {
       setTypeTestState((prev) => ({
         ...prev,
         unfinishedText:
           prev.unfinishedText +
           " " +
-          words.sort(() => 0.5 - Math.random()).join(" "),
+          keys.sort(() => 0.5 - Math.random()).join(" "),
       }));
     }
   }, [typeTestState]);
@@ -149,50 +162,27 @@ const App = () => {
         prev.delete("Backspace");
         return new Set(prev);
       });
-    } else if (code === "Backspace") {
-      // Remove 1 from typedText if applicable
+    }
+
+    // Handle backspace separately
+    else if (code === "Backspace") {
       setTypeTestState((prev) => {
-        if (prev.typedText.length === 0) {
-          return {
-            ...prev,
-          };
-        }
+        const currentTypedText = prev.typedText;
+        // Remove the last character from typedText
+        const updatedTypedText = currentTypedText.slice(0, -1);
 
         return {
           ...prev,
-          typedText: prev.typedText.slice(0, prev.typedText.length - 1),
+          typedText: updatedTypedText,
         };
-      });
-    } else if (code === "Space") {
-      setTypeTestState((prev) => {
-        const nextUnfinishedWord = prev.unfinishedText.slice(
-          0,
-          prev.unfinishedText.indexOf(" ")
-        );
-
-        if (prev.typedText === nextUnfinishedWord) {
-          // Handle when a word is typed correctly by:
-          // 1. Remove word from unfinishedText
-          // 2. Add word to finishedText
-          // 3. Reset typedText
-          return {
-            finishedText: prev.finishedText + nextUnfinishedWord + " ",
-            typedText: "",
-            unfinishedText: prev.unfinishedText.slice(
-              prev.unfinishedText.indexOf(" ") + 1
-            ),
-          };
-        } else {
-          // If word is typed incorrectly, just add as usual
-          return {
-            ...prev,
-            typedText: prev.typedText + " ",
-          };
-        }
       });
     } else {
       if (meta) {
         // If performing a command, ignore the typed letter
+        return;
+      }
+      if (code === "Space") {
+        // Ignore spaces for now.
         return;
       }
 
@@ -200,10 +190,39 @@ const App = () => {
       const typedLetter =
         (shift ? keyMap[code].shiftValue : keyMap[code].value) || "";
 
-      setTypeTestState((prev) => ({
-        ...prev,
-        typedText: prev.typedText + typedLetter,
-      }));
+      setTypeTestState((prev) => {
+        let updatedTypedText = prev.typedText + typedLetter;
+        let updatedFinishedText = prev.finishedText;
+        let updatedUnfinishedText = prev.unfinishedText;
+
+        // Check if the updatedTypedText matches the next part of the unfinishedText
+        // If it's a complete match, update the finishedText and clear typedText
+        if (updatedUnfinishedText.startsWith(updatedTypedText)) {
+          // Check if the updatedTypedText exactly matches the next segment of unfinishedText
+          if (updatedUnfinishedText.startsWith(updatedTypedText)) {
+            // Check if the updatedTypedText matches the unfinishedText exactly (implying the segment is complete)
+            if (
+              updatedTypedText === updatedUnfinishedText ||
+              updatedUnfinishedText.startsWith(updatedTypedText + " ")
+            ) {
+              updatedFinishedText += updatedTypedText + " "; // Add the completed segment and a space to finishedText
+              updatedUnfinishedText = updatedUnfinishedText
+                .substring(updatedTypedText.length)
+                .trimStart(); // Advance past the matched segment
+              updatedTypedText = ""; // Reset typedText since it's now part of finishedText
+            }
+          }
+        } else {
+          // Handle incorrect input; this is where you might flash the background red, etc.
+          // Since you're looking to not confirm correctness with a space, incorrect handling logic might be adjusted here
+        }
+
+        return {
+          finishedText: updatedFinishedText,
+          typedText: updatedTypedText,
+          unfinishedText: updatedUnfinishedText,
+        };
+      });
     }
   };
 
@@ -271,26 +290,6 @@ const App = () => {
         onBlur={() => resetKeys()}
       >
         <div className="mb-4 flex items-start gap-8">
-          <div className="flex gap-4 mb-4 shrink">
-            <KeyboardOption
-              name="QWERTY"
-              description="The standard format. Designed to minimize typewriter jams."
-              highlight={keyboardLayout === KeyboardLayout.QWERTY}
-              onClick={() => setKeyboardLayout(KeyboardLayout.QWERTY)}
-            />
-            <KeyboardOption
-              name="Dvorak"
-              description="Designed for a fast and ergonomic typing experience."
-              highlight={keyboardLayout === KeyboardLayout.DVORAK}
-              onClick={() => setKeyboardLayout(KeyboardLayout.DVORAK)}
-            />
-            <KeyboardOption
-              name="Colemak"
-              description="Resembles QWERTY while being more efficient and comfortable."
-              highlight={keyboardLayout === KeyboardLayout.COLEMAK}
-              onClick={() => setKeyboardLayout(KeyboardLayout.COLEMAK)}
-            />
-          </div>
           <div className="text-right shrink-0 grow">
             <button
               tabIndex={-1}
